@@ -1,5 +1,4 @@
 class Post < ActiveRecord::Base
-  include ActiveModel::Validations
 
   validates :title, presence: true
   validates :content, length: { minimum: 250 }
@@ -7,6 +6,7 @@ class Post < ActiveRecord::Base
   validates :category, inclusion: { in: %w(Fiction Non-Fiction) }
   validate :is_clickbait?
 
+  # if using RegEx
   # CLICKBAIT_PATTERNS = [
   #   /Won't Believe/i,
   #   /Secret/i,
@@ -21,9 +21,11 @@ class Post < ActiveRecord::Base
   #   end
   # end
   #
+
   def is_clickbait?
-    if title
+    if title.present?
       string_arr = ["Won't Believe", "Secret", "Top [number]", "Guess"]
+
       errors.add(:title, "must be clickbait") unless string_arr.any? { |string| title.include?(string) }
     end
   end
