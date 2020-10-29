@@ -3,16 +3,16 @@ class Post < ActiveRecord::Base
   validates :content, length: { minimum: 250 }
   validates :summary, length: { maximum: 250 }
   validates :category, inclusion: { in: %w(Fiction Non-Fiction)}
-  validates :is_clickbaity?
+  validate :is_clickbaity?
 
-  clickbaity_regex = [
+  CLICKBAITY = [
     /Won't Believe/i,
     /Secret/i,
     /Top [0-9]*/i,
     /Guess/i]
 
   def is_clickbaity?
-    if clickbaity_regex.none? { |regex| regex.match title }
+    if CLICKBAITY.none? { |regex| regex.match title }
       errors.add(:title, "Not Clickbaity Enough")
     end
   end
